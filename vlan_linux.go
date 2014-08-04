@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/milosgajdos83/libcontainer/netlink"
+	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
 )
 
 // VlanOptions allows you to specify options for vlan link.
