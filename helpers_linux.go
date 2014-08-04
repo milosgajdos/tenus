@@ -17,11 +17,7 @@ import (
 	"unicode"
 
 	"github.com/dotcloud/docker/pkg/system"
-)
-
-const (
-	// Linux Kernel limits the length of network device names
-	IfcNameLen = 16
+	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
 )
 
 // generates random string for makeNetInterfaceName()
@@ -100,7 +96,7 @@ func NetInterfaceNameValid(name string) (bool, error) {
 		return false, fmt.Errorf("Interface name too short: %s", name)
 	}
 
-	if len(name) > IfcNameLen {
+	if len(name) > netlink.IFNAMSIZ {
 		return false, fmt.Errorf("Interface name too long: %s", name)
 	}
 

@@ -7,7 +7,7 @@ import (
 	"syscall"
 
 	"github.com/dotcloud/docker/pkg/system"
-	"github.com/milosgajdos83/libcontainer/netlink"
+	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
 )
 
 // VethOptions allows you to specify options for veth link.

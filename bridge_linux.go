@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/milosgajdos83/libcontainer/netlink"
+	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
 )
 
 // Bridger embeds Linker interface and adds one extra function.
