@@ -16,7 +16,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/dotcloud/docker/pkg/system"
+	"github.com/milosgajdos83/libcontainer-milosgajdos83/system"
 	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
 )
 
