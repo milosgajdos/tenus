@@ -18,7 +18,7 @@ SCRIPT
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "trusty64"
+  config.vm.box = "ubuntu/trusty64"
   config.vm.hostname = "tenus"
   config.vm.network :private_network, ip: "10.0.2.88"
   config.vm.network :private_network, ip: "10.0.2.89"
