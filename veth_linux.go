@@ -6,8 +6,8 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/system"
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
+	"github.com/docker/libcontainer/netlink"
+	"github.com/docker/libcontainer/system"
 )
 
 // VethOptions allows you to specify options for veth link.
@@ -57,7 +57,7 @@ func NewVethPair() (Vether, error) {
 	ifcName := makeNetInterfaceName("veth")
 	peerName := makeNetInterfaceName("veth")
 
-	if err := netlink.NetworkCreateVethPair(ifcName, peerName); err != nil {
+	if err := netlink.NetworkCreateVethPair(ifcName, peerName, 0); err != nil {
 		return nil, err
 	}
 
@@ -109,7 +109,7 @@ func NewVethPairWithOptions(ifcName string, opts VethOptions) (Vether, error) {
 		peerName = makeNetInterfaceName("veth")
 	}
 
-	if err := netlink.NetworkCreateVethPair(ifcName, peerName); err != nil {
+	if err := netlink.NetworkCreateVethPair(ifcName, peerName, 0); err != nil {
 		return nil, err
 	}
 

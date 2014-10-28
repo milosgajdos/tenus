@@ -6,8 +6,8 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/system"
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
+	"github.com/docker/libcontainer/netlink"
+	"github.com/docker/libcontainer/system"
 )
 
 // LinkOptions allows you to specify network link options.

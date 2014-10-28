@@ -16,8 +16,8 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/system"
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
+	"github.com/docker/libcontainer/netlink"
+	"github.com/docker/libcontainer/system"
 )
 
 // generates random string for makeNetInterfaceName()

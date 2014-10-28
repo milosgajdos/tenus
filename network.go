@@ -1,7 +1,7 @@
 package tenus
 
 import (
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
+	"github.com/docker/libcontainer/netlink"
 )
 
 type NetworkOptions struct {
