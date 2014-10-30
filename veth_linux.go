@@ -6,14 +6,16 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/system"
-	"github.com/milosgajdos83/libcontainer-milosgajdos83/netlink"
+	"github.com/docker/libcontainer/netlink"
+	"github.com/docker/libcontainer/system"
 )
 
 // VethOptions allows you to specify options for veth link.
 type VethOptions struct {
 	// Veth pair's peer interface name
 	PeerName string
+	// TX queue length
+	TxQueueLen int
 }
 
 // Vether embeds Linker interface and adds few more functions mostly to handle peer link interface
@@ -57,7 +59,7 @@ func NewVethPair() (Vether, error) {
 	ifcName := makeNetInterfaceName("veth")
 	peerName := makeNetInterfaceName("veth")
 
-	if err := netlink.NetworkCreateVethPair(ifcName, peerName); err != nil {
+	if err := netlink.NetworkCreateVethPair(ifcName, peerName, 0); err != nil {
 		return nil, err
 	}
 
@@ -88,6 +90,7 @@ func NewVethPair() (Vether, error) {
 // peer interface name. It returns error if the veth pair could not be created.
 func NewVethPairWithOptions(ifcName string, opts VethOptions) (Vether, error) {
 	peerName := opts.PeerName
+	txQLen := opts.TxQueueLen
 
 	if ok, err := NetInterfaceNameValid(ifcName); !ok {
 		return nil, err
@@ -109,7 +112,11 @@ func NewVethPairWithOptions(ifcName string, opts VethOptions) (Vether, error) {
 		peerName = makeNetInterfaceName("veth")
 	}
 
-	if err := netlink.NetworkCreateVethPair(ifcName, peerName); err != nil {
+	if txQLen < 0 {
+		return nil, fmt.Errorf("TX queue length must be a positive integer: %d", txQLen)
+	}
+
+	if err := netlink.NetworkCreateVethPair(ifcName, peerName, txQLen); err != nil {
 		return nil, err
 	}
 

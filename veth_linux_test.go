@@ -52,8 +52,8 @@ func Test_NewVethPair(t *testing.T) {
 }
 
 var vethOptionTests = []vethTest{
-	{"vethHost01", VethOptions{"vethGuest01"}},
-	{"vethHost02", VethOptions{"vethGuest02"}},
+	{"vethHost01", VethOptions{"vethGuest01", 0}},
+	{"vethHost02", VethOptions{"vethGuest02", 0}},
 }
 
 func Test_NewVethPairWithOptions(t *testing.T) {
