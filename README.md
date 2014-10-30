@@ -2,9 +2,7 @@
 
 **tenus** is a [Golang](http://golang.org/) package which allows you to configure and manage Linux network devices programmatically. It communicates with Linux Kernel via [netlink](http://man7.org/linux/man-pages/man7/netlink.7.html) to facilitate creation and configuration of network devices on the Linux host. The package also allows for more advanced network setups with Linux containers including [Docker](https://github.com/dotcloud/docker/).
 
-**tenus** uses an enhanced version of [libcontainer](https://github.com/docker/libcontainer)'s **netlink** package and adds more functionality than the original [netlink](https://github.com/docker/libcontainer/tree/master/netlink) package offers. Check out the forked implementation [here](https://github.com/milosgajdos83/libcontainer/tree/master/netlink).
-
-The package only works with newer Linux Kernels (3.10+) which are offering reasonably new version of netlink library, so **if you are running older kernel this package won't be of much use to you** I'm afraid. I have developed this package on Ubuntu [Trusty Tahr](http://releases.ubuntu.com/14.04/) which ships with 3.13+ and verified its functionality on [Precise Pangolin](http://releases.ubuntu.com/12.04/) with upgraded kernel to version 3.10.
+**tenus** uses Docker's [libcontainer](https://github.com/docker/libcontainer)'s implementation of **netlink** protocol. The package only works with newer Linux Kernels (3.10+) which are offering reasonably new version of netlink library, so **if you are running older kernel this package won't be of much use to you** I'm afraid. I have developed this package on Ubuntu [Trusty Tahr](http://releases.ubuntu.com/14.04/) which ships with 3.13+ and verified its functionality on [Precise Pangolin](http://releases.ubuntu.com/12.04/) with upgraded kernel to version 3.10.
 
 At the moment only functional tests are available, but the interface design should hopefully allow for easy (ish) unit testing in the future. I do appreciate that the package's **test coverage is not great at the moment**, but the core functionality should be covered. I would massively welcome PRs.
 
