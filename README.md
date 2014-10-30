@@ -1,6 +1,6 @@
 # Linux networking in Golang
 
-**!!!! UPDATE:** this package no longer uses my custom [libcontainer fork](https://github.com/milosgajdos83/libcontainer-milosgajdos83). All of the changes which were introduced in the fork have now been propagated into the Docker's lincontainer package!!!
+**UPDATE: this package no longer uses my custom [libcontainer fork](https://github.com/milosgajdos83/libcontainer-milosgajdos83). All of the changes which were introduced in the fork have now been propagated into the Docker's lincontainer package!!!**
 
 **tenus** is a [Golang](http://golang.org/) package which allows you to configure and manage Linux network devices programmatically. It communicates with Linux Kernel via [netlink](http://man7.org/linux/man-pages/man7/netlink.7.html) to facilitate creation and configuration of network devices on the Linux host. The package also allows for more advanced network setups with Linux containers including [Docker](https://github.com/dotcloud/docker/).
 
