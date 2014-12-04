@@ -159,6 +159,7 @@ type testLinkInfo struct {
 var testLinkInfoData = map[string]func([]string) (string, error){
 	"macvlan": macvlanInfo,
 	"vlan":    vlanInfo,
+	"macvtap": macvtapInfo,
 }
 
 func macvlanInfo(data []string) (string, error) {
@@ -175,6 +176,12 @@ func vlanInfo(data []string) (string, error) {
 	}
 
 	return data[4], nil
+}
+
+func macvtapInfo(data []string) (string, error) {
+	// At the moment this should work fine
+	// If we add more tests in the future we will modify this function
+	return macvlanInfo(data)
 }
 
 func linkInfo(name, linkType string) (*testLinkInfo, error) {
