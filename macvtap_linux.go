@@ -77,7 +77,7 @@ func NewMacVtapLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVtaper
 		return nil, fmt.Errorf("Master MAC VLAN device %s does not exist on the host", masterDev)
 	}
 
-	if err := validateOptions(&opts); err != nil {
+	if err := validateMacVlanOptions(&opts); err != nil {
 		return nil, err
 	}
 

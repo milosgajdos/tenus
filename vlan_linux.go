@@ -10,7 +10,7 @@ import (
 // VlanOptions allows you to specify options for vlan link.
 type VlanOptions struct {
 	// Name of the vlan device
-	VlanDev string
+	Dev string
 	// VLAN tag id
 	Id uint16
 	// MAC address
@@ -91,9 +91,6 @@ func NewVlanLink(masterDev string, id uint16) (Vlaner, error) {
 // vlan link was created successfully on the Linux host. It accepts VlanOptions which allow you to set
 // link's options. It returns error if the link could not be created.
 func NewVlanLinkWithOptions(masterDev string, opts VlanOptions) (Vlaner, error) {
-	id := opts.Id
-	macaddr := opts.MacAddr
-
 	if ok, err := NetInterfaceNameValid(masterDev); !ok {
 		return nil, err
 	}
@@ -102,39 +99,24 @@ func NewVlanLinkWithOptions(masterDev string, opts VlanOptions) (Vlaner, error) 
 		return nil, fmt.Errorf("Master VLAN device %s does not exist on the host", masterDev)
 	}
 
-	vlanDev := opts.VlanDev
-	if vlanDev != "" {
-		if ok, err := NetInterfaceNameValid(vlanDev); !ok {
-			return nil, err
-		}
-
-		if _, err := net.InterfaceByName(vlanDev); err == nil {
-			return nil, fmt.Errorf("VLAN device %s already assigned on the host", vlanDev)
-		}
-	} else {
-		return nil, fmt.Errorf("VLAN device name can not be empty!")
-	}
-
-	if id == 0 {
-		return nil, fmt.Errorf("Incorrect VLAN tag specified: %d", id)
-	}
-
-	if err := netlink.NetworkLinkAddVlan(masterDev, vlanDev, id); err != nil {
+	if err := validateVlanOptions(&opts); err != nil {
 		return nil, err
 	}
 
-	vlanIfc, err := net.InterfaceByName(vlanDev)
+	if err := netlink.NetworkLinkAddVlan(masterDev, opts.Dev, opts.Id); err != nil {
+		return nil, err
+	}
+
+	vlanIfc, err := net.InterfaceByName(opts.Dev)
 	if err != nil {
 		return nil, fmt.Errorf("Could not find the new interface: %s", err)
 	}
 
-	if macaddr != "" {
-		if _, err = net.ParseMAC(macaddr); err == nil {
-			if err := netlink.NetworkSetMacAddress(vlanIfc, macaddr); err != nil {
-				if errDel := DeleteLink(vlanIfc.Name); err != nil {
-					return nil, fmt.Errorf("Incorrect options specified! Attempt to delete the link failed: %s",
-						errDel)
-				}
+	if opts.MacAddr != "" {
+		if err := netlink.NetworkSetMacAddress(vlanIfc, opts.MacAddr); err != nil {
+			if errDel := DeleteLink(vlanIfc.Name); errDel != nil {
+				return nil, fmt.Errorf("Incorrect options specified. Attempt to delete the link failed: %s",
+					errDel)
 			}
 		}
 	}
@@ -149,7 +131,7 @@ func NewVlanLinkWithOptions(masterDev string, opts VlanOptions) (Vlaner, error) 
 			ifc: vlanIfc,
 		},
 		masterIfc: masterIfc,
-		id:        id,
+		id:        opts.Id,
 	}, nil
 }
 
@@ -166,4 +148,28 @@ func (vln *VlanLink) MasterNetInterface() *net.Interface {
 // Id returns vlan link's vlan tag id
 func (vln *VlanLink) Id() uint16 {
 	return vln.id
+}
+
+func validateVlanOptions(opts *VlanOptions) error {
+	if opts.Dev != "" {
+		if ok, err := NetInterfaceNameValid(opts.Dev); !ok {
+			return err
+		}
+
+		if _, err := net.InterfaceByName(opts.Dev); err == nil {
+			return fmt.Errorf("VLAN device %s already assigned on the host", opts.Dev)
+		}
+	} else {
+		opts.Dev = makeNetInterfaceName("vlan")
+	}
+
+	if opts.Id <= 0 {
+		return fmt.Errorf("Incorrect VLAN tag specified: %d", opts.Id)
+	}
+
+	if _, err := net.ParseMAC(opts.MacAddr); err == nil {
+		return fmt.Errorf("Incorrect MacAddress specified: %s", opts.MacAddr)
+	}
+
+	return nil
 }

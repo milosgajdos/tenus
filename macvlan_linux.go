@@ -103,7 +103,7 @@ func NewMacVlanLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVlaner
 		return nil, fmt.Errorf("Master MAC VLAN device %s does not exist on the host", masterDev)
 	}
 
-	if err := validateOptions(&opts); err != nil {
+	if err := validateMacVlanOptions(&opts); err != nil {
 		return nil, err
 	}
 
@@ -153,7 +153,7 @@ func (macvln *MacVlanLink) Mode() string {
 	return macvln.mode
 }
 
-func validateOptions(opts *MacVlanOptions) error {
+func validateMacVlanOptions(opts *MacVlanOptions) error {
 	if opts.Dev != "" {
 		if ok, err := NetInterfaceNameValid(opts.Dev); !ok {
 			return err
