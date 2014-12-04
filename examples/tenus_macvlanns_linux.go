@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	macVlanHost, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", MacVlanDev: "macvlanHostIfc"})
+	macVlanHost, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", Dev: "macvlanHostIfc"})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,7 +27,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	macVlanDocker, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", MacVlanDev: "macvlanDckrIfc"})
+	macVlanDocker, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", Dev: "macvlanDckrIfc"})
 	if err != nil {
 		log.Fatal(err)
 	}

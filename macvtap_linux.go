@@ -20,13 +20,12 @@ type MacVtapLink struct {
 // NewMacVtapLink creates macvtap network link
 //
 // It is equivalent of running:
-//		ip link add name mvt${RANDOM STRING} link ${master interface} type macvtap mode ${mode}
+//		ip link add name mvt${RANDOM STRING} link ${master interface} type macvtap
 // NewMacVtapLink returns MacVtaper which is initialized to a pointer of type MacVtapLink if the
 // macvtap link was created successfully on the Linux host. Newly created link is assigned
-// a random name starting with "mvt". It sets the macvlan mode to the parameter passed as argument.
-// If incorrect network mode is passed as a paramter, it sets the macvlan mode to "bridge".
+// a random name starting with "mvt". It sets the macvlan mode to "bridge" which is a default.
 // It returns error if the link could not be created.
-func NewMacVtapLink(masterDev string, mode string) (MacVtaper, error) {
+func NewMacVtapLink(masterDev string) (MacVtaper, error) {
 	macVtapDev := makeNetInterfaceName("mvt")
 
 	if ok, err := NetInterfaceNameValid(masterDev); !ok {
@@ -37,15 +36,7 @@ func NewMacVtapLink(masterDev string, mode string) (MacVtaper, error) {
 		return nil, fmt.Errorf("Master MAC VTAP device %s does not exist on the host", masterDev)
 	}
 
-	if mode != "" {
-		if _, ok := MacVlanModes[mode]; !ok {
-			return nil, fmt.Errorf("Unsupported MacVtap mode specified: %s", mode)
-		}
-	} else {
-		mode = "bridge"
-	}
-
-	if err := netlink.NetworkLinkAddMacVtap(masterDev, macVtapDev, mode); err != nil {
+	if err := netlink.NetworkLinkAddMacVtap(masterDev, macVtapDev, "bridge"); err != nil {
 		return nil, err
 	}
 
@@ -65,7 +56,7 @@ func NewMacVtapLink(masterDev string, mode string) (MacVtaper, error) {
 				ifc: macVtapIfc,
 			},
 			masterIfc: masterIfc,
-			mode:      mode,
+			mode:      "bridge",
 		},
 	}, nil
 }
@@ -78,10 +69,6 @@ func NewMacVtapLink(masterDev string, mode string) (MacVtaper, error) {
 // NewMacVtapLinkWithOptions returns MacVtaper which is initialized to a pointer of type MacVtapLink if the
 // macvtap link was created successfully on the Linux host. It returns error if the macvtap link could not be created.
 func NewMacVtapLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVtaper, error) {
-	macVtapDev := opts.MacVlanDev
-	mode := opts.Mode
-	macaddr := opts.MacAddr
-
 	if ok, err := NetInterfaceNameValid(masterDev); !ok {
 		return nil, err
 	}
@@ -90,42 +77,24 @@ func NewMacVtapLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVtaper
 		return nil, fmt.Errorf("Master MAC VLAN device %s does not exist on the host", masterDev)
 	}
 
-	if macVtapDev != "" {
-		if ok, err := NetInterfaceNameValid(macVtapDev); !ok {
-			return nil, err
-		}
-
-		if _, err := net.InterfaceByName(macVtapDev); err == nil {
-			return nil, fmt.Errorf("MAC VATP device %s already assigned on the host", macVtapDev)
-		}
-	} else {
-		macVtapDev = makeNetInterfaceName("mvt")
-	}
-
-	if mode != "" {
-		if _, ok := MacVlanModes[mode]; !ok {
-			return nil, fmt.Errorf("Unsupported MacVtap mode specified: %s", mode)
-		}
-	} else {
-		mode = "bridge"
-	}
-
-	if err := netlink.NetworkLinkAddMacVtap(masterDev, macVtapDev, opts.Mode); err != nil {
+	if err := validateOptions(&opts); err != nil {
 		return nil, err
 	}
 
-	macVtapIfc, err := net.InterfaceByName(macVtapDev)
+	if err := netlink.NetworkLinkAddMacVtap(masterDev, opts.Dev, opts.Mode); err != nil {
+		return nil, err
+	}
+
+	macVtapIfc, err := net.InterfaceByName(opts.Dev)
 	if err != nil {
 		return nil, fmt.Errorf("Could not find the new interface: %s", err)
 	}
 
-	if macaddr != "" {
-		if _, err = net.ParseMAC(macaddr); err == nil {
-			if err := netlink.NetworkSetMacAddress(macVtapIfc, macaddr); err != nil {
-				if errDel := DeleteLink(macVtapIfc.Name); err != nil {
-					return nil, fmt.Errorf("Incorrect options specified. Attempt to delete the link failed: %s",
-						errDel)
-				}
+	if opts.MacAddr != "" {
+		if err := netlink.NetworkSetMacAddress(macVtapIfc, opts.MacAddr); err != nil {
+			if errDel := DeleteLink(macVtapIfc.Name); errDel != nil {
+				return nil, fmt.Errorf("Incorrect options specified. Attempt to delete the link failed: %s",
+					errDel)
 			}
 		}
 	}
@@ -141,7 +110,7 @@ func NewMacVtapLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVtaper
 				ifc: macVtapIfc,
 			},
 			masterIfc: masterIfc,
-			mode:      mode,
+			mode:      opts.Mode,
 		},
 	}, nil
 }

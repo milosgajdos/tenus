@@ -7,13 +7,11 @@ import (
 )
 
 type macvlnTest struct {
-	masterDev   string
-	macvlanMode string
+	masterDev string
 }
 
 var macvlnTests = []macvlnTest{
-	{"master01", "bridge"},
-	{"master02", "private"},
+	{"master01"},
 }
 
 func Test_NewMacVlanLink(t *testing.T) {
@@ -30,9 +28,9 @@ func Test_NewMacVlanLink(t *testing.T) {
 			time.Sleep(10 * time.Millisecond)
 		}
 
-		mvln, err := NewMacVlanLink(tt.masterDev, tt.macvlanMode)
+		mvln, err := NewMacVlanLink(tt.masterDev)
 		if err != nil {
-			t.Fatalf("NewMacVlanLink(%s, %s) failed to run: %s", tt.masterDev, tt.macvlanMode, err)
+			t.Fatalf("NewMacVlanLink(%s) failed to run: %s", tt.masterDev, err)
 		}
 
 		mvlnName := mvln.NetInterface().Name
@@ -49,14 +47,14 @@ func Test_NewMacVlanLink(t *testing.T) {
 
 		if testRes.linkType != "macvlan" {
 			tl.teardown()
-			t.Fatalf("NewMacVlanLink(%s, %s) failed: expected macvlan, returned %s",
-				tt.masterDev, tt.macvlanMode, testRes.linkType)
+			t.Fatalf("NewMacVlanLink(%s) failed: expected macvlan, returned %s",
+				tt.masterDev, testRes.linkType)
 		}
 
-		if testRes.linkData != tt.macvlanMode {
+		if testRes.linkData != "bridge" {
 			tl.teardown()
-			t.Fatalf("NewMacVlanLink(%s, %s) failed: expected %s, returned %s",
-				tt.masterDev, tt.macvlanMode, tt.macvlanMode, testRes.linkData)
+			t.Fatalf("NewMacVlanLink(%s) failed: expected bridge, returned %s",
+				tt.masterDev, testRes.linkData)
 		}
 
 		if err := tl.teardown(); err != nil {
