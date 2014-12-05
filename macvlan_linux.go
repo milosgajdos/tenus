@@ -7,6 +7,11 @@ import (
 	"github.com/docker/libcontainer/netlink"
 )
 
+// Default MacVlan mode
+const (
+	default_mode = "bridge"
+)
+
 // Supported macvlan modes by tenus package
 var MacVlanModes = map[string]bool{
 	"private": true,
@@ -63,7 +68,7 @@ func NewMacVlanLink(masterDev string) (MacVlaner, error) {
 		return nil, fmt.Errorf("Master MAC VLAN device %s does not exist on the host", masterDev)
 	}
 
-	if err := netlink.NetworkLinkAddMacVlan(masterDev, macVlanDev, "bridge"); err != nil {
+	if err := netlink.NetworkLinkAddMacVlan(masterDev, macVlanDev, default_mode); err != nil {
 		return nil, err
 	}
 
@@ -82,7 +87,7 @@ func NewMacVlanLink(masterDev string) (MacVlaner, error) {
 			ifc: macVlanIfc,
 		},
 		masterIfc: masterIfc,
-		mode:      "bridge",
+		mode:      default_mode,
 	}, nil
 }
 
@@ -171,7 +176,7 @@ func validateMacVlanOptions(opts *MacVlanOptions) error {
 			return fmt.Errorf("Unsupported MacVlan mode specified: %s", opts.Mode)
 		}
 	} else {
-		opts.Mode = "bridge"
+		opts.Mode = default_mode
 	}
 
 	if opts.MacAddr != "" {

@@ -36,7 +36,7 @@ func NewMacVtapLink(masterDev string) (MacVtaper, error) {
 		return nil, fmt.Errorf("Master MAC VTAP device %s does not exist on the host", masterDev)
 	}
 
-	if err := netlink.NetworkLinkAddMacVtap(masterDev, macVtapDev, "bridge"); err != nil {
+	if err := netlink.NetworkLinkAddMacVtap(masterDev, macVtapDev, default_mode); err != nil {
 		return nil, err
 	}
 
@@ -56,7 +56,7 @@ func NewMacVtapLink(masterDev string) (MacVtaper, error) {
 				ifc: macVtapIfc,
 			},
 			masterIfc: masterIfc,
-			mode:      "bridge",
+			mode:      default_mode,
 		},
 	}, nil
 }
