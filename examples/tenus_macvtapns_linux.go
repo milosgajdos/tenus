@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	macVlanHost, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", Dev: "macvlanHostIfc"})
+	macVlanHost, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", Dev: "macvlnHost"})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,26 +27,26 @@ func main() {
 		fmt.Println(err)
 	}
 
-	macVlanDocker, err := tenus.NewMacVlanLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", Dev: "macvlanDckrIfc"})
+	macVtapDocker, err := tenus.NewMacVtapLinkWithOptions("eth1", tenus.MacVlanOptions{Mode: "bridge", Dev: "mvtDckrIfc"})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pid, err := tenus.DockerPidByName("mcvlandckr", "/var/run/docker.sock")
+	pid, err := tenus.DockerPidByName("mvtapdckr", "/var/run/docker.sock")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := macVlanDocker.SetLinkNetNsPid(pid); err != nil {
+	if err := macVtapDocker.SetLinkNetNsPid(pid); err != nil {
 		log.Fatal(err)
 	}
 
-	macVlanDckrIp, macVlanDckrIpNet, err := net.ParseCIDR("10.0.41.3/16")
+	macVtapDckrIp, macVtapDckrIpNet, err := net.ParseCIDR("10.0.41.3/16")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err := macVlanDocker.SetLinkNetInNs(pid, macVlanDckrIp, macVlanDckrIpNet, nil); err != nil {
+	if err := macVtapDocker.SetLinkNetInNs(pid, macVtapDckrIp, macVtapDckrIpNet, nil); err != nil {
 		log.Fatal(err)
 	}
 }
