@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/docker/libcontainer/netlink"
+	"github.com/opencontainers/runc/libcontainer/netlink"
 )
 
 // MacVtaper embeds MacVlaner interface

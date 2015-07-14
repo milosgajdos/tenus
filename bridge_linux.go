@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/docker/libcontainer/netlink"
+	"github.com/opencontainers/runc/libcontainer/netlink"
 )
 
 // Bridger embeds Linker interface and adds one extra function.
