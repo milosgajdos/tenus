@@ -1,10 +1,10 @@
 # Linux networking in Golang
 
-**UPDATE: this package no longer uses my custom [libcontainer fork](https://github.com/milosgajdos83/libcontainer-milosgajdos83). All of the changes which were introduced in the fork have now been propagated into the Docker's [libcontainer repo](https://github.com/docker/libcontainer/)!!!**
+**UPDATE: this package no longer uses original [libcontainer](https://github.com/docker/libcontainer) repo to source netlink package. It now uses [runc](https://github.com/opencontainers/runc) packages where the original libcontainer repo has been moved!!!**
 
 **tenus** is a [Golang](http://golang.org/) package which allows you to configure and manage Linux network devices programmatically. It communicates with Linux Kernel via [netlink](http://man7.org/linux/man-pages/man7/netlink.7.html) to facilitate creation and configuration of network devices on the Linux host. The package also allows for more advanced network setups with Linux containers including [Docker](https://github.com/dotcloud/docker/).
 
-**tenus** uses Docker's [libcontainer](https://github.com/docker/libcontainer)'s implementation of **netlink** protocol. The package only works with newer Linux Kernels (3.10+) which are offering reasonably new version of netlink library, so **if you are running older kernel this package won't be of much use to you** I'm afraid. I have developed this package on Ubuntu [Trusty Tahr](http://releases.ubuntu.com/14.04/) which ships with 3.13+ and verified its functionality on [Precise Pangolin](http://releases.ubuntu.com/12.04/) with upgraded kernel to version 3.10.
+**tenus** uses [runc](https://github.com/opencontainers/runc)'s implementation of **netlink** protocol. The package only works with newer Linux Kernels (3.10+) which are offering reasonably new version of netlink library, so **if you are running older kernel this package won't be of much use to you** I'm afraid. I have developed this package on Ubuntu [Trusty Tahr](http://releases.ubuntu.com/14.04/) which ships with 3.13+ and verified its functionality on [Precise Pangolin](http://releases.ubuntu.com/12.04/) with upgraded kernel to version 3.10.
 
 At the moment only functional tests are available, but the interface design should hopefully allow for easy (ish) unit testing in the future. I do appreciate that the package's **test coverage is not great at the moment**, but the core functionality should be covered. I would massively welcome PRs.
 
