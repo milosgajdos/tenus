@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// CREATE VLAN HOST INTERFACE
-	vlanDocker, err := tenus.NewVlanLinkWithOptions("eth1", tenus.VlanOptions{VlanDev: "vlanDckr", Id: 20})
+	vlanDocker, err := tenus.NewVlanLinkWithOptions("eth1", tenus.VlanOptions{Dev: "vlanDckr", Id: 20})
 	if err != nil {
 		log.Fatal(err)
 	}

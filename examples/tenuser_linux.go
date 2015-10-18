@@ -85,7 +85,7 @@ func main() {
 	}
 
 	// CREATE MACVLAN INTERFACE AND BRING IT UP
-	macvlan, err := tenus.NewMacVlanLinkWithOptions("eth0", tenus.MacVlanOptions{Mode: "bridge", MacVlanDev: "macvlan01"})
+	macvlan, err := tenus.NewMacVlanLinkWithOptions("eth0", tenus.MacVlanOptions{Mode: "bridge", Dev: "macvlan01"})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -95,7 +95,7 @@ func main() {
 	}
 
 	// CREATE VLAN INTERFACE AND BRING IT UP
-	vlan, err := tenus.NewVlanLinkWithOptions("eth1", tenus.VlanOptions{Id: 10, VlanDev: "vlan01"})
+	vlan, err := tenus.NewVlanLinkWithOptions("eth1", tenus.VlanOptions{Id: 10, Dev: "vlan01"})
 	if err != nil {
 		log.Fatal(err)
 	}
