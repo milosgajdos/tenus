@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/opencontainers/runc/libcontainer/netlink"
+	"github.com/docker/libcontainer/netlink"
 )
 
 // Default MacVlan mode

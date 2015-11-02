@@ -6,8 +6,8 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/opencontainers/runc/libcontainer/netlink"
-	"github.com/opencontainers/runc/libcontainer/system"
+	"github.com/docker/libcontainer/netlink"
+	"github.com/docker/libcontainer/system"
 )
 
 // VethOptions allows you to specify options for veth link.
