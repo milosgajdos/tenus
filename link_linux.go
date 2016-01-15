@@ -38,6 +38,8 @@ type Linker interface {
 	SetLinkDown() error
 	// SetLinkIp configures the link's IP address
 	SetLinkIp(net.IP, *net.IPNet) error
+	// UnsetLinkIp remove and IP address from the link
+	UnsetLinkIp(net.IP, *net.IPNet) error
 	// SetLinkDefaultGw configures the link's default gateway
 	SetLinkDefaultGw(*net.IP) error
 	// SetLinkNetNsPid moves the link to network namespace specified by PID
@@ -79,6 +81,23 @@ func NewLink(ifcName string) (Linker, error) {
 		ifc: newIfc,
 	}, nil
 }
+
+// NewLinkFromName creates new tenus link on Linux host from an existing interface
+func NewLinkFrom(ifcName string) (Linker, error) {
+	if ok, err := NetInterfaceNameValid(ifcName); !ok {
+		return nil, err
+	}
+
+	newIfc, err := net.InterfaceByName(ifcName)
+	if err != nil {
+		return nil, fmt.Errorf("Could not find the new interface: %s", err)
+	}
+
+	return &Link{
+		ifc: newIfc,
+	}, nil
+}
+
 
 // NewLinkWithOptions creates new network link on Linux host and sets some of its network
 // parameters passed in as LinkOptions
@@ -174,6 +193,12 @@ func (l *Link) SetLinkIp(ip net.IP, network *net.IPNet) error {
 	return netlink.NetworkLinkAddIp(l.NetInterface(), ip, network)
 }
 
+// SetLinkIp configures the link's IP address.
+// It is equivalent of running: ip address add ${address}/${mask} dev ${interface name}
+func (l *Link) UnsetLinkIp(ip net.IP, network *net.IPNet) error {
+	return netlink.NetworkLinkDelIp(l.NetInterface(), ip, network)
+}
+
 // SetLinkDefaultGw configures the link's default Gateway.
 // It is equivalent of running: ip route add default via ${ip address}
 func (l *Link) SetLinkDefaultGw(gw *net.IP) error {
@@ -230,6 +255,14 @@ func (l *Link) SetLinkNsToDocker(name string, dockerHost string) error {
 	}
 
 	return l.SetLinkNetNsPid(pid)
+}
+
+func RenameInterfaceByName(old string, newName string) error {
+	iface, err := net.InterfaceByName(old)
+	if err != nil {
+		return err
+	}
+	return netlink.NetworkChangeName(iface, newName)
 }
 
 // setLinkOptions validates and sets link's various options passed in as LinkOptions.

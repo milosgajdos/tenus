@@ -85,6 +85,26 @@ func NewBridgeWithName(ifcName string) (Bridger, error) {
 	}, nil
 }
 
+// NewBridgeFrom returns a network bridge on Linux host from the name passed as a parameter.
+// It is equivalent of running: ip link add name ${ifcName} type bridge
+// It returns error if the bridge can not be created.
+func BridgeFromName(ifcName string) (Bridger, error) {
+	if ok, err := NetInterfaceNameValid(ifcName); !ok {
+		return nil, err
+	}
+
+	newIfc, err := net.InterfaceByName(ifcName)
+	if err != nil {
+		return nil, fmt.Errorf("Could not find the new interface: %s", err)
+	}
+
+	return &Bridge{
+		Link: Link{
+			ifc: newIfc,
+		},
+	}, nil
+}
+
 // AddToBridge adds network interfaces to network bridge.
 // It is equivalent of running: ip link set ${netIfc name} master ${netBridge name}
 // It returns error when it fails to add the network interface to bridge.
