@@ -33,6 +33,10 @@ func randomString(size int) string {
 	return string(bytes)
 }
 
+func MakeNetInterfaceName(base string) string {
+	return makeNetInterfaceName(base)
+}
+
 // generates new unused network interfaces name with given prefix
 func makeNetInterfaceName(base string) string {
 	for {

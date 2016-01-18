@@ -85,6 +85,25 @@ func NewBridgeWithName(ifcName string) (Bridger, error) {
 	}, nil
 }
 
+// BridgeFromName returns a tenus network bridge from an existing bridge of given name on the Linux host.
+// It returns error if the bridge of the given name cannot be found.
+func BridgeFromName(ifcName string) (Bridger, error) {
+	if ok, err := NetInterfaceNameValid(ifcName); !ok {
+		return nil, err
+	}
+
+	newIfc, err := net.InterfaceByName(ifcName)
+	if err != nil {
+		return nil, fmt.Errorf("Could not find the new interface: %s", err)
+	}
+
+	return &Bridge{
+		Link: Link{
+			ifc: newIfc,
+		},
+	}, nil
+}
+
 // AddToBridge adds network interfaces to network bridge.
 // It is equivalent of running: ip link set ${netIfc name} master ${netBridge name}
 // It returns error when it fails to add the network interface to bridge.

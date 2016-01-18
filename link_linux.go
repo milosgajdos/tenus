@@ -38,6 +38,8 @@ type Linker interface {
 	SetLinkDown() error
 	// SetLinkIp configures the link's IP address
 	SetLinkIp(net.IP, *net.IPNet) error
+	// UnsetLinkIp remove and IP address from the link
+	UnsetLinkIp(net.IP, *net.IPNet) error
 	// SetLinkDefaultGw configures the link's default gateway
 	SetLinkDefaultGw(*net.IP) error
 	// SetLinkNetNsPid moves the link to network namespace specified by PID
@@ -68,6 +70,22 @@ func NewLink(ifcName string) (Linker, error) {
 
 	if err := netlink.NetworkLinkAdd(ifcName, "dummy"); err != nil {
 		return nil, fmt.Errorf("Could not create new link %s: %s", ifcName, err)
+	}
+
+	newIfc, err := net.InterfaceByName(ifcName)
+	if err != nil {
+		return nil, fmt.Errorf("Could not find the new interface: %s", err)
+	}
+
+	return &Link{
+		ifc: newIfc,
+	}, nil
+}
+
+// NewLinkFrom creates new tenus link on Linux host from an existing interface of given name
+func NewLinkFrom(ifcName string) (Linker, error) {
+	if ok, err := NetInterfaceNameValid(ifcName); !ok {
+		return nil, err
 	}
 
 	newIfc, err := net.InterfaceByName(ifcName)
@@ -174,6 +192,12 @@ func (l *Link) SetLinkIp(ip net.IP, network *net.IPNet) error {
 	return netlink.NetworkLinkAddIp(l.NetInterface(), ip, network)
 }
 
+// UnsetLinkIp configures the link's IP address.
+// It is equivalent of running: ip address del ${address}/${mask} dev ${interface name}
+func (l *Link) UnsetLinkIp(ip net.IP, network *net.IPNet) error {
+	return netlink.NetworkLinkDelIp(l.NetInterface(), ip, network)
+}
+
 // SetLinkDefaultGw configures the link's default Gateway.
 // It is equivalent of running: ip route add default via ${ip address}
 func (l *Link) SetLinkDefaultGw(gw *net.IP) error {
@@ -230,6 +254,15 @@ func (l *Link) SetLinkNsToDocker(name string, dockerHost string) error {
 	}
 
 	return l.SetLinkNetNsPid(pid)
+}
+
+// RenameInterfaceByName renames an interface of given name.
+func RenameInterfaceByName(old string, newName string) error {
+	iface, err := net.InterfaceByName(old)
+	if err != nil {
+		return err
+	}
+	return netlink.NetworkChangeName(iface, newName)
 }
 
 // setLinkOptions validates and sets link's various options passed in as LinkOptions.
