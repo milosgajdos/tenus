@@ -85,9 +85,8 @@ func NewBridgeWithName(ifcName string) (Bridger, error) {
 	}, nil
 }
 
-// NewBridgeFrom returns a network bridge on Linux host from the name passed as a parameter.
-// It is equivalent of running: ip link add name ${ifcName} type bridge
-// It returns error if the bridge can not be created.
+// BridgeFromName returns a tenus network bridge from an existing bridge of given name on the Linux host.
+// It returns error if the bridge of the given name cannot be found.
 func BridgeFromName(ifcName string) (Bridger, error) {
 	if ok, err := NetInterfaceNameValid(ifcName); !ok {
 		return nil, err

@@ -182,6 +182,51 @@ func main() {
 }
 ```
 
+### Working with existing bridges and interfaces
+
+The following examples show how to retrieve exisiting interfaces as a tenus link and bridge
+
+```
+package main
+
+import (
+	"fmt"
+	"log"
+	"net"
+
+	"github.com/milosgajdos83/tenus"
+)
+
+func main() {
+	// RETRIEVE EXISTING BRIDGE
+	br, err := tenus.BridgeFromName("bridge0")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// REMOVING AN IP FROM A BRIDGE INTERFACE (BEFORE RECONFIGURATION)
+	brIp, brIpNet, err := net.ParseCIDR("10.0.41.1/16")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := br.UnsetLinkIp(brIp, brIpNet); err != nil {
+		log.Fatal(err)
+	}
+
+	// RETRIEVE EXISTING INTERFACE
+	dl, err := tenus.NewLinkFrom("eth0")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// RENAMING AN INTERFACE BY NAME
+	if err := tenus.RenameInterfaceByName("vethPSQSEl", "vethNEWNAME"); err != nil {
+		log.Fatal(err)
+	}
+
+}
+```
+
 ### VLAN and MAC VLAN interfaces
 
 You can check out [VLAN](https://gist.github.com/milosgajdos83/9f68b1818dca886e9ae8) and [Mac VLAN](https://gist.github.com/milosgajdos83/296fb90d076f259a5b0a) examples, too.
