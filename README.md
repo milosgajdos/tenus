@@ -186,7 +186,7 @@ func main() {
 
 The following examples show how to retrieve exisiting interfaces as a tenus link and bridge
 
-```
+```go
 package main
 
 import (
