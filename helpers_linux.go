@@ -161,7 +161,7 @@ func DockerPidByName(name string, dockerHost string) (int, error) {
 		network = "tcp"
 	}
 
-	req, err := http.NewRequest("GET", "http:// /containers/"+name+"/json", nil)
+	req, err := http.NewRequest("GET", "http://docker.socket/containers/"+name+"/json", nil)
 	if err != nil {
 		return 0, fmt.Errorf("Fail to create http request: %s", err)
 	}
