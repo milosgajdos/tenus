@@ -180,7 +180,7 @@ func validateMacVlanOptions(opts *MacVlanOptions) error {
 	}
 
 	if opts.MacAddr != "" {
-		if _, err := net.ParseMAC(opts.MacAddr); err == nil {
+		if _, err := net.ParseMAC(opts.MacAddr); err != nil {
 			return fmt.Errorf("Incorrect MAC ADDRESS specified: %s", opts.MacAddr)
 		}
 	}

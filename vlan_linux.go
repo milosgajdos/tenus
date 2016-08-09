@@ -167,7 +167,7 @@ func validateVlanOptions(opts *VlanOptions) error {
 		return fmt.Errorf("Incorrect VLAN tag specified: %d", opts.Id)
 	}
 
-	if _, err := net.ParseMAC(opts.MacAddr); err == nil {
+	if _, err := net.ParseMAC(opts.MacAddr); err != nil {
 		return fmt.Errorf("Incorrect MacAddress specified: %s", opts.MacAddr)
 	}
 
