@@ -14,6 +14,8 @@ type Bridger interface {
 	Linker
 	// AddSlaveIfc adds network interface to the network bridge
 	AddSlaveIfc(*net.Interface) error
+	//RemoveSlaveIfc removes network interface from the network bridge
+	RemoveSlaveIfc(*net.Interface) error
 }
 
 // Bridge is Link which has zero or more slave network interfaces.
