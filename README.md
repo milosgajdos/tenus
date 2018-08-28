@@ -1,5 +1,8 @@
 # Linux networking in Golang
 
+[![GoDoc](https://godoc.org/github.com/milosgajdos83/tenus?status.svg)](https://godoc.org/github.com/milosgajdos83/tenus)
+[![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 **tenus** is a [Golang](http://golang.org/) package which allows you to configure and manage Linux network devices programmatically. It communicates with Linux Kernel via [netlink](http://man7.org/linux/man-pages/man7/netlink.7.html) to facilitate creation and configuration of network devices on the Linux host. The package also allows for more advanced network setups with Linux containers including [Docker](https://github.com/dotcloud/docker/).
 
 **tenus** uses [runc](https://github.com/opencontainers/runc)'s implementation of **netlink** protocol. The package only works with newer Linux Kernels (3.10+) which are shipping reasonably new `netlink` protocol implementation, so **if you are running older kernel this package won't be of much use to you** I'm afraid. I have developed this package on Ubuntu [Trusty Tahr](http://releases.ubuntu.com/14.04/) which ships with 3.13+ and verified its functionality on [Precise Pangolin](http://releases.ubuntu.com/12.04/) with upgraded kernel to version 3.10. I could worked around the `netlink` issues by using `ioctl` syscalls, but I decided to prefer "pure netlink" implementation, so suck it old Kernels.
@@ -16,7 +19,7 @@ milosgajdos@bimbonet ~ $ vagrant up
 
 ```
 
-**Note** using the provided ```Vagrantfile``` will take quite a long time to spin the VM as vagrant will setup Ubuntu Trusty VM with all the prerequisities: 
+**Note** using the provided ```Vagrantfile``` will take quite a long time to spin the VM as vagrant will setup Ubuntu Trusty VM with all the prerequisities:
 
 * it will install golang and docker onto the VM
 * it will export ```GOPATH``` and ```go get``` the **tenus** package onto the VM
@@ -24,7 +27,7 @@ milosgajdos@bimbonet ~ $ vagrant up
 
 At the moment running the tests require Docker to be installed, but in the future I'd love to separate tests per interface so that you can run only chosen test sets.
 
-Once the VM is running, ```cd``` into particular repo directory and you can run the tests: 
+Once the VM is running, ```cd``` into particular repo directory and you can run the tests:
 
 ```bash
 milosgajdos@bimbonet ~ $ cd $GOPATH/src/github.com/milosgajdos83/tenus
