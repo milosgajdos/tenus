@@ -229,6 +229,7 @@ func SetNetNsToPid(nspid int) error {
 	}
 
 	nsFd, err := NetNsHandle(nspid)
+	defer syscall.Close(int(nsFd))
 	if err != nil {
 		return fmt.Errorf("Could not get network namespace handle: %s", err)
 	}
