@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/milosgajdos83/tenus"
+	"github.com/milosgajdos/tenus"
 )
 
 func main() {

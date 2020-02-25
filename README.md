@@ -1,6 +1,6 @@
 # Linux networking in Golang
 
-[![GoDoc](https://godoc.org/github.com/milosgajdos83/tenus?status.svg)](https://godoc.org/github.com/milosgajdos83/tenus)
+[![GoDoc](https://godoc.org/github.com/milosgajdos/tenus?status.svg)](https://godoc.org/github.com/milosgajdos/tenus)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 **tenus** is a [Golang](http://golang.org/) package which allows you to configure and manage Linux network devices programmatically. It communicates with Linux Kernel via [netlink](http://man7.org/linux/man-pages/man7/netlink.7.html) to facilitate creation and configuration of network devices on the Linux host. The package also allows for more advanced network setups with Linux containers including [Docker](https://github.com/dotcloud/docker/).
@@ -14,7 +14,7 @@ At the moment only functional tests are available, but the interface design shou
 There is a ```Vagrantfile``` available in the repo so using [vagrant](https://github.com/mitchellh/vagrant) is the easiest way to get started:
 
 ```bash
-milosgajdos@bimbonet ~ $ git clone https://github.com/milosgajdos83/tenus.git
+milosgajdos@bimbonet ~ $ git clone https://github.com/milosgajdos/tenus.git
 milosgajdos@bimbonet ~ $ vagrant up
 
 ```
@@ -30,15 +30,15 @@ At the moment running the tests require Docker to be installed, but in the futur
 Once the VM is running, ```cd``` into particular repo directory and you can run the tests:
 
 ```bash
-milosgajdos@bimbonet ~ $ cd $GOPATH/src/github.com/milosgajdos83/tenus
+milosgajdos@bimbonet ~ $ cd $GOPATH/src/github.com/milosgajdos/tenus
 milosgajdos@bimbonet ~ $ sudo go test
 ```
 
 If you don't want to use the provided ```Vagrantfile```, you can simply run your own Linux VM (with 3.10+ kernel) and follow the regular golang development flow:
 
 ```bash
-milosgajdos@bimbonet ~ $ go get github.com/milosgajdos83/tenus
-milosgajdos@bimbonet ~ $ cd $GOPATH/src/github.com/milosgajdos83/tenus
+milosgajdos@bimbonet ~ $ go get github.com/milosgajdos/tenus
+milosgajdos@bimbonet ~ $ cd $GOPATH/src/github.com/milosgajdos/tenus
 milosgajdos@bimbonet ~ $ sudo go test
 ```
 
@@ -59,7 +59,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/milosgajdos83/tenus"
+	"github.com/milosgajdos/tenus"
 )
 
 func main() {
@@ -110,7 +110,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/milosgajdos83/tenus"
+	"github.com/milosgajdos/tenus"
 )
 
 func main() {
@@ -197,7 +197,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/milosgajdos83/tenus"
+	"github.com/milosgajdos/tenus"
 )
 
 func main() {
@@ -232,7 +232,7 @@ func main() {
 
 ### VLAN and MAC VLAN interfaces
 
-You can check out [VLAN](https://gist.github.com/milosgajdos83/9f68b1818dca886e9ae8) and [Mac VLAN](https://gist.github.com/milosgajdos83/296fb90d076f259a5b0a) examples, too.
+You can check out [VLAN](https://gist.github.com/milosgajdos/9f68b1818dca886e9ae8) and [Mac VLAN](https://gist.github.com/milosgajdos/296fb90d076f259a5b0a) examples, too.
 
 ### More examples
 
@@ -244,4 +244,4 @@ This is just a rough beginning of the project which I put together over couple o
 
 ## Documentation
 
-More in depth package documentation is available via [godoc](http://godoc.org/github.com/milosgajdos83/tenus)
+More in depth package documentation is available via [godoc](http://godoc.org/github.com/milosgajdos/tenus)

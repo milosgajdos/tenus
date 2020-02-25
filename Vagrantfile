@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 $provision = <<SCRIPT
-apt-get update -qq && apt-get install -y vim curl python-software-properties golang 
+apt-get update -qq && apt-get install -y vim curl python-software-properties golang
 add-apt-repository -y "deb https://get.docker.io/ubuntu docker main"
 curl -s https://get.docker.io/gpg | sudo apt-key add -
 apt-get update -qq; apt-get install -y lxc-docker
@@ -12,7 +12,7 @@ export GOPATH=/opt/golang
 export PATH=$PATH:$GOPATH/bin
 EOF
 . /etc/profile.d/envvar.sh
-go get "github.com/milosgajdos83/tenus"
+go get "github.com/milosgajdos/tenus"
 SCRIPT
 
 VAGRANTFILE_API_VERSION = "2"
