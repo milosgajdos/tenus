@@ -224,7 +224,7 @@ func (l *Link) SetLinkNetInNs(nspid int, ip net.IP, network *net.IPNet, gw *net.
 	}
 
 	if err := netlink.NetworkLinkUp(l.ifc); err != nil {
-		return fmt.Errorf("Unable to bring %s interface UP: %s", l.ifc.Name, nspid)
+		return fmt.Errorf("Unable to bring %s interface UP: %d", l.ifc.Name, nspid)
 	}
 
 	if gw != nil {
@@ -319,7 +319,7 @@ func setLinkOptions(ifc *net.Interface, opts LinkOptions) error {
 				}
 
 				if err := netlink.NetworkLinkUp(ifc); err != nil {
-					return fmt.Errorf("Unable to bring %s interface UP: %s", ifc.Name, ns)
+					return fmt.Errorf("Unable to bring %s interface UP: %d", ifc.Name, ns)
 				}
 			}
 		} else {

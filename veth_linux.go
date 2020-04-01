@@ -203,7 +203,7 @@ func (veth *VethPair) SetPeerLinkNetInNs(nspid int, ip net.IP, network *net.IPNe
 	}
 
 	if err := netlink.NetworkLinkUp(veth.peerIfc); err != nil {
-		return fmt.Errorf("Unable to bring %s interface UP: %s", veth.peerIfc.Name, nspid)
+		return fmt.Errorf("Unable to bring %s interface UP: %d", veth.peerIfc.Name, nspid)
 	}
 
 	if gw != nil {
