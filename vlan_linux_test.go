@@ -33,7 +33,7 @@ func Test_NewVlanLink(t *testing.T) {
 
 		vln, err := NewVlanLink(tt.masterDev, tt.id)
 		if err != nil {
-			t.Fatalf("NewVlanLink(%s, %s) failed to run: %s", tt.masterDev, tt.id, err)
+			t.Fatalf("NewVlanLink(%s, %d) failed to run: %s", tt.masterDev, tt.id, err)
 		}
 
 		vlnName := vln.NetInterface().Name
