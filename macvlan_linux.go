@@ -127,6 +127,13 @@ func NewMacVlanLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVlaner
 				return nil, fmt.Errorf("Incorrect options specified. Attempt to delete the link failed: %s", errDel)
 			}
 		}
+
+		hwaddr, err := net.ParseMAC(opts.MacAddr)
+		if err != nil {
+			return nil, err
+		}
+
+		macVlanIfc.HardwareAddr = hwaddr
 	}
 
 	masterIfc, err := net.InterfaceByName(masterDev)

@@ -97,6 +97,13 @@ func NewMacVtapLinkWithOptions(masterDev string, opts MacVlanOptions) (MacVtaper
 					errDel)
 			}
 		}
+
+		hwaddr, err := net.ParseMAC(opts.MacAddr)
+		if err != nil {
+			return nil, err
+		}
+
+		macVtapIfc.HardwareAddr = hwaddr
 	}
 
 	masterIfc, err := net.InterfaceByName(masterDev)

@@ -50,7 +50,7 @@ func Test_NewVlanLink(t *testing.T) {
 
 		if testRes.linkType != "vlan" {
 			tl.teardown()
-			t.Fatalf("NewMacVlanLink(%s, %d) failed: expected vlan, returned %s",
+			t.Fatalf("NewVlanLink(%s, %d) failed: expected vlan, returned %s",
 				tt.masterDev, tt.id, testRes.linkType)
 		}
 
@@ -62,8 +62,85 @@ func Test_NewVlanLink(t *testing.T) {
 
 		if uint16(id) != tt.id {
 			tl.teardown()
-			t.Fatalf("NewMacVlanLink(%s, %d) failed: expected %d, returned %d",
+			t.Fatalf("NewVlanLink(%s, %d) failed: expected %d, returned %d",
 				tt.masterDev, tt.id, tt.id, id)
+		}
+
+		if err := tl.teardown(); err != nil {
+			t.Fatalf("testLink.teardown failed: %v", err)
+		} else {
+			time.Sleep(10 * time.Millisecond)
+		}
+	}
+}
+
+type vlnWithOptionsTest struct {
+	masterDev string
+	opts      *VlanOptions
+}
+
+var vlnWithOptionsTests = []vlnWithOptionsTest{
+	{"master01", &VlanOptions{Dev: "test", MacAddr: "aa:aa:aa:aa:aa:aa", Id: 10}},
+	{"master02", &VlanOptions{Dev: "test", MacAddr: "aa:aa:aa:aa:aa:aa", Id: 20}},
+}
+
+func Test_NewVlanLinkWithOptions(t *testing.T) {
+	for _, tt := range vlnWithOptionsTests {
+		var iface *net.Interface
+
+		tl := &testLink{}
+
+		if err := tl.prepTestLink(tt.masterDev, "dummy"); err != nil {
+			t.Skipf("NewVlanLinkWithOptions test requries external command: %v", err)
+		}
+
+		if err := tl.create(); err != nil {
+			t.Fatalf("testLink.create failed: %v", err)
+		} else {
+			time.Sleep(10 * time.Millisecond)
+		}
+
+		vln, err := NewVlanLinkWithOptions(tt.masterDev, *tt.opts)
+		if err != nil {
+			t.Fatalf("NewVlanLinkWithOptions(%s, %v) failed to run: %s", tt.masterDev, *tt.opts, err)
+		}
+
+		iface = vln.NetInterface()
+
+		if iface.HardwareAddr.String() != tt.opts.MacAddr {
+			tl.teardown()
+			t.Fatalf("NewVlanLinkWithOptions(%s, %v) failed: expected %s, returned %s",
+				tt.masterDev, *tt.opts, tt.opts.MacAddr, iface.HardwareAddr.String())
+		}
+
+		vlnName := vln.NetInterface().Name
+		if _, err := net.InterfaceByName(vlnName); err != nil {
+			tl.teardown()
+			t.Fatalf("Could not find %s on the host: %s", vlnName, err)
+		}
+
+		testRes, err := linkInfo(vlnName, "vlan")
+		if err != nil {
+			tl.teardown()
+			t.Fatalf("Failed to list %s operation mode: %s", vlnName, err)
+		}
+
+		if testRes.linkType != "vlan" {
+			tl.teardown()
+			t.Fatalf("NewVlanLinkWithOptions(%s, %v) failed: expected vlan, returned %s",
+				tt.masterDev, *tt.opts, testRes.linkType)
+		}
+
+		id, err := strconv.Atoi(testRes.linkData)
+		if err != nil {
+			tl.teardown()
+			t.Fatalf("Failed to convert link data %s : %s", testRes.linkData, err)
+		}
+
+		if uint16(id) != tt.opts.Id {
+			tl.teardown()
+			t.Fatalf("NewVlanLinkWithOptions(%s, %v) failed: expected %d, returned %d",
+				tt.masterDev, *tt.opts, tt.opts.Id, id)
 		}
 
 		if err := tl.teardown(); err != nil {
