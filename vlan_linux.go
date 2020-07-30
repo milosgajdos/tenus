@@ -119,6 +119,13 @@ func NewVlanLinkWithOptions(masterDev string, opts VlanOptions) (Vlaner, error) 
 					errDel)
 			}
 		}
+
+		hwaddr, err := net.ParseMAC(opts.MacAddr)
+		if err != nil {
+			return nil, err
+		}
+
+		vlanIfc.HardwareAddr = hwaddr
 	}
 
 	masterIfc, err := net.InterfaceByName(masterDev)
